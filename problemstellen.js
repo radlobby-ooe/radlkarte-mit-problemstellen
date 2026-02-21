@@ -38,7 +38,8 @@ function updatePSControl() {
     }
     let rkChecked = rkGlobal.rkShown;
     let html = '<form><input id="rkToggleCheckbox" type="checkbox" ' + (rkChecked ? "checked" : "") + ' onClick="rkToggleCheckboxClicked()"/>Radlkarte'
-        +'<input id="nvToggleCheckbox" type="checkbox" ' + (rkChecked ? "" : "") + ' onClick="nvToggleCheckboxClicked()"/>Netzvorschlag<br/>';
+        +'<input id="nvToggleCheckbox" type="checkbox" ' + (rkChecked ? "" : "") + ' onClick="nvToggleCheckboxClicked()"/>Netzvorschlag<br/>'
+        +'<input id="rhrToggleCheckbox" type="checkbox" ' + (rkChecked ? "" : "") + ' onClick="rhrToggleCheckboxClicked()"/>RHR OÖ<br/>';
     if ((psGlobal.problemStellenFile != null) && (psGlobal.problemStellenFile.length !== 0)) {
         html += '<input id="psToggleCheckbox" type="checkbox" checked onClick="psToggleCheckboxClicked()"/>Problemstellen ';
     } else {
@@ -99,6 +100,11 @@ function isNvToggleCheckboxChecked() {
     return (checkBox != null) && checkBox.checked;
 }
 
+function isRhrToggleCheckboxChecked() {
+    let checkBox = document.getElementById("rhrToggleCheckbox");
+    return (checkBox != null) && checkBox.checked;
+}
+
 function psToggleCheckboxClicked() {
     if (isPsToggleCheckboxChecked()) {
         setPSSubControlHidden(false);
@@ -113,6 +119,9 @@ function rkToggleCheckboxClicked() {
     if (isRkToggleCheckboxChecked()) {
         let checkBox = document.getElementById("nvToggleCheckbox");
         if (checkBox != null) { checkBox.checked=false; }
+
+        let checkBoxRhr = document.getElementById("rhrToggleCheckbox");
+        if (checkBoxRhr != null) { checkBoxRhr.checked=false; }
 
         removeAllSegmentsAndMarkers();
         loadGeoJson(rkGlobal.currentGeoJsonFile);
@@ -129,6 +138,19 @@ function nvToggleCheckboxClicked() {
 
         removeAllSegmentsAndMarkers();
         loadGeoJson("data/netzvorschlag-linz.geojson");
+    } else {
+        debug("removeAllSegmentsAndMarkers");
+        removeAllSegmentsAndMarkers();
+    }
+}
+
+function rhrToggleCheckboxClicked() {
+    if (isRhrToggleCheckboxChecked()) {
+        let checkBox = document.getElementById("rkToggleCheckbox");
+        if (checkBox != null) { checkBox.checked=false; }
+
+        removeAllSegmentsAndMarkers();
+        loadGeoJson("data/rhr-ooe.geojson");
     } else {
         debug("removeAllSegmentsAndMarkers");
         removeAllSegmentsAndMarkers();
