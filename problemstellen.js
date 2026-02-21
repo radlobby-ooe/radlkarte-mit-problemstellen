@@ -117,8 +117,8 @@ function psToggleCheckboxClicked() {
 
 function rkToggleCheckboxClicked() {
     if (isRkToggleCheckboxChecked()) {
-        let checkBox = document.getElementById("nvToggleCheckbox");
-        if (checkBox != null) { checkBox.checked=false; }
+        let checkBoxNv = document.getElementById("nvToggleCheckbox");
+        if (checkBoxNv != null) { checkBoxNv.checked=false; }
 
         let checkBoxRhr = document.getElementById("rhrToggleCheckbox");
         if (checkBoxRhr != null) { checkBoxRhr.checked=false; }
@@ -133,8 +133,11 @@ function rkToggleCheckboxClicked() {
 
 function nvToggleCheckboxClicked() {
     if (isNvToggleCheckboxChecked()) {
-        let checkBox = document.getElementById("rkToggleCheckbox");
-        if (checkBox != null) { checkBox.checked=false; }
+        let checkBoxRk = document.getElementById("rkToggleCheckbox");
+        if (checkBoxRk != null) { checkBoxRk.checked=false; }
+
+        let checkBoxRhr = document.getElementById("rhrToggleCheckbox");
+        if (checkBoxRhr != null) { checkBoxRhr.checked=false; }
 
         removeAllSegmentsAndMarkers();
         loadGeoJson("data/netzvorschlag-linz.geojson");
@@ -146,8 +149,11 @@ function nvToggleCheckboxClicked() {
 
 function rhrToggleCheckboxClicked() {
     if (isRhrToggleCheckboxChecked()) {
-        let checkBox = document.getElementById("rkToggleCheckbox");
-        if (checkBox != null) { checkBox.checked=false; }
+        let checkBoxRk = document.getElementById("rkToggleCheckbox");
+        if (checkBoxRk != null) { checkBoxRk.checked=false; }
+
+        let checkBoxNv = document.getElementById("nvToggleCheckbox");
+        if (checkBoxNv != null) { checkBoxNv.checked=false; }
 
         removeAllSegmentsAndMarkers();
         loadGeoJson("data/rhr-ooe.geojson");
