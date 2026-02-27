@@ -160,7 +160,7 @@ function getLueckeTexts(geometry, properties) {
             streetViewString = "<div style='text-align: center; font-size: smaller;' title='Öffnet neues Fenster mit Street View bei der Problemstelle'><a href='" + streetViewUrl + "' target='_blank'>Google Street View</a></div>";
         }
     } else if (geometry.type === "Point") {
-        let p0 = geometry.coordinates[0];
+        let p0 = geometry.coordinates;
         let streetViewUrl = "http://maps.google.com/maps?q=&layer=c&cbll=" + p0[1] + "," + p0[0];
         streetViewString = "<div style='text-align: center; font-size: smaller;' title='Öffnet neues Fenster mit Street View bei der Problemstelle'><a href='" + streetViewUrl + "' target='_blank'>Google Street View</a></div>";
     } else {
@@ -174,6 +174,8 @@ function getLueckeTexts(geometry, properties) {
         relatedTopicArticle = "https://www.radlobby.at/alarmierende-studie-zur-dooring-gefahr";
     } else if (properties.Typ === "Lücke") {
         relatedTopicArticle = "https://www.radlobby.at/linz/lueckenliste";
+    } else if (properties.Typ.toString().startsWith("Sackgasse")) {
+        relatedTopicArticle = "https://www.radlobby.at/linz/offene-sackgassen";
     }
 
     let relatedHomepageArticle = "";

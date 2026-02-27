@@ -67,12 +67,9 @@ function updatePSSubControl() {
         for (let i = 0; i < types.length; i++) {
             let typ = types[i];
             console.log("Rendering " + typ);
-            let sum = 0;
-            for (let i=0; i<psGlobal.psGeoJsons.length; i++) {
-                if (psGlobal.psGeoJsons[i].properties.Typ === typ) {
-                    sum++;
-                }
-            }
+            let sum = (psGlobal.psSumsByTyp && psGlobal.psSumsByTyp[typ] != null)
+                ? psGlobal.psSumsByTyp[typ]
+                : 0;
 
             cbs = cbs + '<input id="psToggleCheckbox' + typ + '" type="checkbox" checked onClick="psSubToggleCheckboxClicked()"/> ' + typ + ' (' + sum + ')<br/>';
         }
@@ -203,6 +200,18 @@ function initializePSIcons() {
     });
     psGlobal.icons["Allgemein"] = L.icon({
         iconUrl: 'css/warning.svg',
+        iconSize: [30, 30],
+        iconAnchor: [15, 15],
+        opacity: 0.5
+    });
+    psGlobal.icons["Sackgasse-RF"] = L.icon({
+        iconUrl: 'css/sackgasse-rf.svg',
+        iconSize: [30, 30],
+        iconAnchor: [15, 15],
+        opacity: 0.5
+    });
+    psGlobal.icons["Sackgasse-F"] = L.icon({
+        iconUrl: 'css/sackgasse-f.svg',
         iconSize: [30, 30],
         iconAnchor: [15, 15],
         opacity: 0.5
@@ -560,6 +569,9 @@ function loadProblemstellenGeojson() {
 
         let firstParse = Object.keys(psGlobal.psTypes).length === 0;
 
+        psGlobal.psSumsByTyp = psGlobal.psSumsByTyp || {};
+        if (firstParse) psGlobal.psSumsByTyp = {};
+
         for (var i = 0; i < data.features.length; i++) {
             var geojson = data.features[i];
 
@@ -567,6 +579,9 @@ function loadProblemstellenGeojson() {
 
             if (geojson.type == 'Feature' && geojson.properties != undefined || geojson.geometry != undefined) {
                 psGlobal.psTypes[geojson.properties.Typ] = "dummy";
+
+                var typ = geojson.properties.Typ;
+                psGlobal.psSumsByTyp[typ] = (psGlobal.psSumsByTyp[typ] || 0) + 1;
 
                 if (firstParse || showTyp(geojson.properties.Typ)) {
                     if (geojson.geometry.type === 'LineString') {
