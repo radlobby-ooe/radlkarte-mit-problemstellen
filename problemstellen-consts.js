@@ -170,12 +170,19 @@ function getLueckeTexts(geometry, properties) {
 
     // todo from const, or from jira or by naming convention for every Typ on Radlobby Linz Homepage?
     let relatedTopicArticle = "";
+    let relatedTopicTypeText = "";
     if (properties.Typ === "Dooring") {
         relatedTopicArticle = "https://www.radlobby.at/alarmierende-studie-zur-dooring-gefahr";
+        relatedTopicTypeText = "Dooring";
     } else if (properties.Typ === "Lücke") {
         relatedTopicArticle = "https://www.radlobby.at/linz/lueckenliste";
+        relatedTopicTypeText = "Lücken im Radwegnetz";
     } else if (properties.Typ.toString().startsWith("Sackgasse")) {
         relatedTopicArticle = "https://www.radlobby.at/linz/offene-sackgassen";
+        relatedTopicTypeText = "Offene Sackgassen";
+    } else if (properties.Typ === "Verparkt") {
+        relatedTopicArticle = "https://www.radlobby.at/linz/polizei-radweg";
+        relatedTopicTypeText = "Verparkte Radwege";
     }
 
     let relatedHomepageArticle = "";
@@ -188,7 +195,7 @@ function getLueckeTexts(geometry, properties) {
         if (relatedHomepageArticle !== "") {
             relatedArticles += "<a href='" + relatedHomepageArticle + "' target='_blank'>Mehr zur Problemstelle</a>&nbsp;";
         } else if (relatedTopicArticle !== "") { // only if no concrete article
-            relatedArticles += "<a href='" + relatedTopicArticle + "' target='_blank'>Mehr zum Thema " + typeText + "</a>";
+            relatedArticles += "<a href='" + relatedTopicArticle + "' target='_blank'>Mehr zum Thema " + relatedTopicTypeText + "</a>";
         }
         relatedArticles += "</div>"
     }
