@@ -9,6 +9,7 @@ psGlobal.styleFunction = updateLineStyles;
 psGlobal.psGeoJsons = []; // array holding all problemStellen geojsons (lines)
 psGlobal.problemStellenFile = null;
 psGlobal.psTypes = {}; // after first parsing holds all available types - if empty, all should be shown. if not empty, types-checkboxes should be considered.
+psGlobal.psTypeVisibility = {}; // persistent per-type visibility, also used before checkboxes exist.
 
 function initializePS() {
     console.log("Initializing PS Module");
@@ -70,8 +71,9 @@ function updatePSSubControl() {
             let sum = (psGlobal.psSumsByTyp && psGlobal.psSumsByTyp[typ] != null)
                 ? psGlobal.psSumsByTyp[typ]
                 : 0;
+            let checked = showTyp(typ);
 
-            cbs = cbs + '<input id="psToggleCheckbox' + typ + '" type="checkbox" checked onClick="psSubToggleCheckboxClicked()"/> ' + typ + ' (' + sum + ')<br/>';
+            cbs = cbs + '<input id="psToggleCheckbox' + typ + '" type="checkbox" ' + (checked ? "checked" : "") + ' onClick="psSubToggleCheckboxClicked()"/> ' + typ + ' (' + sum + ')<br/>';
         }
         div.innerHTML =
             '<div style="margin-left: 50px;"><form>' + cbs + '<form/></div>';
@@ -79,6 +81,14 @@ function updatePSSubControl() {
 }
 
 function psSubToggleCheckboxClicked() {
+    var types = Object.keys(psGlobal.psTypes);
+    for (let i = 0; i < types.length; i++) {
+        let typ = types[i];
+        let checkBox = document.getElementById("psToggleCheckbox" + typ);
+        if (checkBox != null) {
+            psGlobal.psTypeVisibility[typ] = checkBox.checked;
+        }
+    }
     loadProblemstellenGeojson();
 }
 
@@ -161,8 +171,15 @@ function rhrToggleCheckboxClicked() {
 }
 
 function showTyp(Typ) {
+    if (psGlobal.psTypeVisibility != null && typeof psGlobal.psTypeVisibility[Typ] !== 'undefined') {
+        return psGlobal.psTypeVisibility[Typ];
+    }
     let checkBox = document.getElementById("psToggleCheckbox" + Typ);
     return (checkBox == null) || checkBox.checked;
+}
+
+function shouldShowTypeByDefault(typ) {
+    return (typeof typ !== 'string') || (typ.toLowerCase().indexOf("sackgasse") < 0);
 }
 
 
@@ -530,6 +547,7 @@ function setProblemstellenGeojson(problemStellenFile) {
 
     psGlobal.initialOpen = openId;
     psGlobal.psTypes = {};
+    psGlobal.psTypeVisibility = {};
     if (problemStellenFile === undefined) {
         psGlobal.problemStellenFile = null;
     } else {
@@ -566,11 +584,7 @@ function loadProblemstellenGeojson() {
         }
 
         console.log('problemstellen length ' + data.features.length);
-
-        let firstParse = Object.keys(psGlobal.psTypes).length === 0;
-
-        psGlobal.psSumsByTyp = psGlobal.psSumsByTyp || {};
-        if (firstParse) psGlobal.psSumsByTyp = {};
+        psGlobal.psSumsByTyp = {};
 
         for (var i = 0; i < data.features.length; i++) {
             var geojson = data.features[i];
@@ -578,12 +592,14 @@ function loadProblemstellenGeojson() {
             //console.log('Handling a Problemstellen-GeoJson ' + JSON.stringify(geojson));
 
             if (geojson.type == 'Feature' && geojson.properties != undefined || geojson.geometry != undefined) {
-                psGlobal.psTypes[geojson.properties.Typ] = "dummy";
-
                 var typ = geojson.properties.Typ;
+                psGlobal.psTypes[typ] = "dummy";
+                if (typeof psGlobal.psTypeVisibility[typ] === 'undefined') {
+                    psGlobal.psTypeVisibility[typ] = shouldShowTypeByDefault(typ);
+                }
                 psGlobal.psSumsByTyp[typ] = (psGlobal.psSumsByTyp[typ] || 0) + 1;
 
-                if (firstParse || showTyp(geojson.properties.Typ)) {
+                if (showTyp(typ)) {
                     if (geojson.geometry.type === 'LineString') {
                         // lines will be added to map in style function
                         psGlobal.psGeoJsons.push(geojson);
@@ -634,9 +650,7 @@ function loadProblemstellenGeojson() {
             }
 
         }
-        if (firstParse) {
-            updatePSSubControl();
-        }
+        updatePSSubControl();
         psGlobal.styleFunction();
 
         rkGlobal.leafletMap.on('zoomend', function (ev) {
@@ -648,3 +662,5 @@ function loadProblemstellenGeojson() {
         });
     });
 }
+
+
