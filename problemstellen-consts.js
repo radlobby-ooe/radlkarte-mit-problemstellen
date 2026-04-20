@@ -183,6 +183,9 @@ function getLueckeTexts(geometry, properties) {
     } else if (properties.Typ === "Verparkt") {
         relatedTopicArticle = "https://www.radlobby.at/linz/polizei-radweg";
         relatedTopicTypeText = "Verparkte Radwege";
+    } else if (properties.Typ === "Radparken") {
+        relatedTopicArticle = "https://www.radlobby.at/fahrradparken";
+        relatedTopicTypeText = "Radabstellanlage";
     }
 
     let relatedHomepageArticle = "";

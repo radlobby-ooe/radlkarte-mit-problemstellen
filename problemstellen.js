@@ -203,6 +203,12 @@ function initializePSIcons() {
         iconAnchor: [15, 15],
         opacity: 0.5
     });
+    psGlobal.icons["Radparken"] = L.icon({
+        iconUrl: 'css/radparken.svg',
+        iconSize: [30, 30],
+        iconAnchor: [15, 15],
+        opacity: 0.5
+    });
     psGlobal.icons["Lücke"] = L.icon({
         iconUrl: 'css/luecke.svg',
         iconSize: [30, 30],
