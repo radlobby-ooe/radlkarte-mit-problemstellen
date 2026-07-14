@@ -179,7 +179,19 @@ function showTyp(Typ) {
 }
 
 function shouldShowTypeByDefault(typ) {
-    return (typeof typ !== 'string') || (typ.toLowerCase().indexOf("sackgasse") < 0);
+    if (typeof typ !== 'string') {
+        return true;
+    }
+    if (window.SACKGASSE_ONLY) {
+        // Show only Sackgasse types
+        return typ.toLowerCase().indexOf("sackgasse") >= 0;
+    } else if (window.location.search) {
+        // If any URL parameters are provided, show all types
+        return true;
+    } else {
+        // Show all types except Sackgasse (default behavior)
+        return typ.toLowerCase().indexOf("sackgasse") < 0;
+    }
 }
 
 
