@@ -408,13 +408,22 @@ function loadLeaflet() {
 	});
 	var mixed = L.layerGroup([minMaxZoomLayer, cartodbPositronLowZoom, osmHiZoom]);
 
-	var basemapAtOrthofoto = L.tileLayer('https://maps{s}.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/{z}/{y}/{x}.{format}', {
-		maxZoom: 18, // up to 20 is possible
-		attribution: 'Datenquelle: <a href="https://www.basemap.at">basemap.at</a>',
-		subdomains: ["", "1", "2", "3", "4"],
-		format: 'jpeg',
-		bounds: [[46.35877, 8.782379], [49.037872, 17.189532]]
-	});
+//	var basemapAtOrthofoto = L.tileLayer('https://maps{s}.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/{z}/{y}/{x}.{format}', {
+//		maxZoom: 18, // up to 20 is possible
+//		attribution: 'Datenquelle: <a href="https://www.basemap.at">basemap.at</a>',
+//		subdomains: ["", "1", "2", "3", "4"],
+//		format: 'jpeg',
+//		bounds: [[46.35877, 8.782379], [49.037872, 17.189532]]
+//	});
+
+  var basemapAtOrthofoto = L.tileLayer('https://mapsneu.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/{z}/{y}/{x}.{format}', {
+    maxZoom: 18, // up to 20 is possible
+    attribution: '<a href="https://www.basemap.at" target="_blank">basemap.at</a>',
+    subdomains: ["", "1", "2", "3", "4"],
+    format: 'jpeg',
+    bounds: [[46.35877, 8.782379], [49.037872, 17.189532]]
+  });
+	
 	var ocm = L.tileLayer('https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=ab5e4b2d24854fefb139c538ef5187a8', {
 		minZoom: 0,
 		maxZoom: 18,
